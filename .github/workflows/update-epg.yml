@@ -1,0 +1,31 @@
+name: Update EPG File
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs every day at midnight (UTC)
+  workflow_dispatch:     # Allows manual triggering
+
+jobs:
+  update-epg:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download the EPG file
+        run: |
+          curl -L https://strongepg.ip-ddns.com/8k-epg.xml.gz -o 8k-epg.xml.gz
+
+      - name: Commit and push changes if any
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          # Check if the file has changed
+          if [ -n "$(git status --porcelain)" ]; then
+            git add 8k-epg.xml.gz
+            git commit -m "Update EPG file [skip ci]"
+            git push origin main
+          else
+            echo "No changes detected, nothing to commit."
+          fi
