@@ -24,7 +24,7 @@ jobs:
           # Check if the file has changed
           if [ -n "$(git status --porcelain)" ]; then
             git add 8k-epg.xml.gz
-            git commit -m "Update EPG file [skip ci]"
+            git commit -m "Update EPG file"
             git push origin main
           else
             echo "No changes detected, nothing to commit."
