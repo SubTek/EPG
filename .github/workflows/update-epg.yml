@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download the EPG files
+      - name: Download the EPG files securely
         env:
           URL_1: ${{ secrets.EPG_URL_1 }}
           URL_2: ${{ secrets.EPG_URL_2 }}
@@ -24,12 +24,16 @@ jobs:
           curl -L "$URL_2" -o "$FILE_2"
 
       - name: Commit and push changes if any
+        env:
+          FILE_1: ${{ secrets.EPG_FILE_1 }}
+          FILE_2: ${{ secrets.EPG_FILE_2 }}
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           if [ -n "$(git status --porcelain)" ]; then
             git add "$FILE_1" "$FILE_2"
-            git commit -m "Update multiple EPG files"
+            git commit -m "Update EPG files"
             git push origin main
           else
             echo "No changes detected, nothing to commit."
+          fi
