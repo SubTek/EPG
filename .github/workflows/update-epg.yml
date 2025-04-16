@@ -23,15 +23,32 @@ jobs:
           curl -L "$URL_1" -o "$FILE_1"
           curl -L "$URL_2" -o "$FILE_2"
 
-      - name: Commit and push changes if any
+      - name: Merge EPG files
         env:
           FILE_1: ${{ secrets.EPG_FILE_1 }}
           FILE_2: ${{ secrets.EPG_FILE_2 }}
         run: |
+          gzip -d -c "$FILE_1" > decompressed1.xml
+          gzip -d -c "$FILE_2" > decompressed2.xml
+          
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > combined.xmltv
+          echo '<tv generator-info-name="Strong EPG" generator-info-url="https://github.com/SubTek/EPG">' >> strong.xml
+          
+          sed '1d;$d' decompressed1.xml >> combined.xml
+          sed '1d;$d' decompressed2.xml >> combined.xml
+          
+          echo '</tv>' >> strong.xml
+          
+          gzip -k strong.xml
+
+      - name: Commit and push changes if any
+        run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
+          
+          git add strong.xml strong.xml.gz
+          
           if [ -n "$(git status --porcelain)" ]; then
-            git add "$FILE_1" "$FILE_2"
             git commit -m "Update EPG files"
             git push origin main
           else
