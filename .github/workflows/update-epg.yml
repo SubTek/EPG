@@ -31,11 +31,11 @@ jobs:
           gzip -d -c "$FILE_1" > decompressed1.xml
           gzip -d -c "$FILE_2" > decompressed2.xml
           
-          echo '<?xml version="1.0" encoding="UTF-8"?>' > combined.xmltv
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > strong.xml
           echo '<tv generator-info-name="Strong EPG" generator-info-url="https://github.com/SubTek/EPG">' >> strong.xml
           
-          sed '1d;$d' decompressed1.xml >> combined.xml
-          sed '1d;$d' decompressed2.xml >> combined.xml
+          sed '1d;$d' decompressed1.xml >> strong.xml
+          sed '1d;$d' decompressed2.xml >> strong.xml
           
           echo '</tv>' >> strong.xml
           
