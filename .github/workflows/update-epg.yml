@@ -39,7 +39,7 @@ jobs:
           
           echo '</tv>' >> strong.xml
           
-          gzip -k strong.xml
+          gzip -kf strong.xml
 
       - name: Commit and push changes if any
         run: |
