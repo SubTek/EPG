@@ -46,7 +46,7 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           
-          git add strong.xml.gz
+          git add strong.xml.gz "$FILE_1" "$FILE_2"
           
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "Update EPG files"
